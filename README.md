@@ -1,13 +1,13 @@
 # Project-3
 outbreak covid 2020 -2021
-## API 
-- We utilized pandas to read in the API. Once the API was read in, we then created a dataframe to save the data. I first converted out the date column, and we then grouped the data by State. Once the data was grouped by State, the sum was calculated to get the total number of Confirmed Cases and Confirmed Deaths from 03-01-2020 to 03-01-2021. A new dataframe was created and saved as a csv file which was later converted to sqlite file for flask app. 
+## Overview 
+- I found a Kaggle data set which had Covid-19 data between 2020-22-01 To 2020-12-04. I cleaned the data using Pandas so only five columns were preserved, [["date", "Positive", "Deaths", "infectionRate"]].  Utilizing dynamic calls using Flask and JavaScript.  A map of the USA highlights each state, where you can hover over the state and see for the date selected between Covid Deaths, Confirmed Positives, InfectionRate.
 
 ## Flask
 -Using flask, flask-render_template, sqlite3, pandas, json.
 
 -Flask
-    Read in two seperate Databases ('states.db', 'cleandata') and a Json file which held the geometries for each state and two u.s. territories (D.C. and Puerto Rico) with sqlite in the flask_app. 
+    Read in two seperate Databases ('states.db') and a Json file which held the geometries for each state and two u.s. territories (D.C. and Puerto Rico) with sqlite in the flask_app. 
 
     Utilizing the @app.route('/covid_data/<map_type>/<selected_date>', methods=['GET']).  This is a dynamic app route where only data can be retrieved.  Using a connection through sqlite3 a query call which will select the state column and map_type column from the states.db for a user who chooses selected_date value.  The map_types were Covid_confirmed, Deaths_confirmed, and infectionRate which are selectable on the dashboard.  Leaflets GeoJSON requires a very specific format for its function to work properly for drawing objects as an overlay. https://leafletjs.com/examples/geojson/
     
@@ -18,10 +18,6 @@ outbreak covid 2020 -2021
 ![loop for data](<images/data_loop.png>)<br>
 
     This was then returned to to my javascript d3 call with: return json.dumps(return_data)
-
-    The second call was a static call that needed to first seperate out each series as a list, then combined as a dictionary and then again returned: return json.dumps()
-
-![static call](<images/static_call.png>)<br>
 
 ## Dynamic Map
 - Using libraries D3, Leaflet, GeoJson, and Bootstrap.
@@ -70,7 +66,4 @@ outbreak covid 2020 -2021
 ![bootstrap html](<images/bootstrap_html.png>)
 ![bootstrap javascript](<images/bootstrap_JS.png>)
 
-## Plotly
-- We utilized plotly to plot our pie and bar graphs. We first read in the json file and then set the data equal to variables to call the data for our plots. We calculated the percentage to get an estimated percentage of confirmed deaths. We then created trace1, trace2, layout, and layout2 for our graphs. We then used plotly to plot our bar and pie graph on the dashboard page.  
-![Screenshot (138)](https://github.com/Shoggato/Project-3/assets/134284646/e74742bb-e2c9-4957-b7ee-c47ae14c75e9)
-![Screenshot (139)](https://github.com/Shoggato/Project-3/assets/134284646/896c0189-e274-4eef-af5f-00c5b007de92)
+

@@ -1,69 +1,71 @@
-# Project-3
-outbreak covid 2020 -2021
-## Overview 
-- I found a Kaggle data set which had Covid-19 data between 2020-22-01 To 2020-12-04. I cleaned the data using Pandas so only five columns were preserved, [["date", "Positive", "Deaths", "infectionRate"]].  Utilizing dynamic calls using Flask and JavaScript.  A map of the USA highlights each state, where you can hover over the state and see for the date selected between Covid Deaths, Confirmed Positives, InfectionRate.
+## Flask Web Application for COVID-19 Visualization
 
-## Flask
--Using flask, flask-render_template, sqlite3, pandas, json.
+This project is a Flask web application that visualizes COVID-19 data using Leaflet.js for map rendering and D3.js for data manipulation. The application fetches data from a SQLite database containing COVID-19 statistics and displays the information on an interactive map.
 
--Flask
-    Read in two seperate Databases ('states.db') and a Json file which held the geometries for each state and two u.s. territories (D.C. and Puerto Rico) with sqlite in the flask_app. 
+## Project Structure
 
-    Utilizing the @app.route('/covid_data/<map_type>/<selected_date>', methods=['GET']).  This is a dynamic app route where only data can be retrieved.  Using a connection through sqlite3 a query call which will select the state column and map_type column from the states.db for a user who chooses selected_date value.  The map_types were Covid_confirmed, Deaths_confirmed, and infectionRate which are selectable on the dashboard.  Leaflets GeoJSON requires a very specific format for its function to work properly for drawing objects as an overlay. https://leafletjs.com/examples/geojson/
-    
-![geojson example](<images/geojson_example.png>)<br>
+`webserver.py`
 
-    Type had to have a ‘type’ key with value feature, a ‘properties’ key dictionary would hold the values that was selected on the drop down of the map based on the date.  and finally the key ‘geometry’ needed to have both a ‘type’ key and a ‘coordinates’ key.  This is why in the beginning of flask this code was required (with open('Resources/state_geometries.json', 'r')).
+This Python script initializes a Flask web server and sets up routes for rendering HTML templates and serving COVID-19 data. It uses SQLite for data storage and leverages the pandas library for data manipulation. The script defines two main routes:
 
-![loop for data](<images/data_loop.png>)<br>
+* `/`: Renders the main dashboard page(`index.html`).
+* `/covid_data/<map_type>/<selected_data>`: A dynamic route that retrieves COVID-19 data based on the selected map type and date.
 
-    This was then returned to to my javascript d3 call with: return json.dumps(return_data)
+## Dependencies
 
-## Dynamic Map
-- Using libraries D3, Leaflet, GeoJson, and Bootstrap.
+* Flask: `flask`
+* SQLite: `sqlite3`
+* Data manipulation: `pandas`
+* Web scraping: `beautifulsoup4`
+* Data visualization: `leaflet.js`,`d3.js`
 
--preface:
-    Most of the code for this map is not mine, I do not own any of the javascript code.  I utilized Mike Bostock who does an excellent explanation of how to convert Geojson to SVG vectors and creating a map.  Using his code I was able to set up the initial map.  His website can be found here https://bost.ocks.org/mike/leaflet/.  I also borrowed certain elements from the example that Leaflet has on their own webpage for this choropleth map https://leafletjs.com/examples/choropleth/.  Finally there is specific format that the data is required to be in for Bostock’s code to work and that can be found here https://leafletjs.com/examples/geojson/ and it was referenced above in the flask section in more detail.
+## Project Setup
 
--dynamic map
-    The Javascript which is in the static/js/logic.js file of the main directory held the map functionality while our flask app named app.py in the main directory would store the data.  Using openstreetmaps from class as the base layer for my map, there are two controllers, the top right controller will show the data that is current for each state based on the date and the map_type that the user has selected from the bottom right controller which is a drop down. There is a slider which was built with bootstrap that allows the user to select the date they want to be shown on the map.
+1. Clone the repository:
 
-![image of working map](<images/image of map.png>)
+```bash
+git clone https://github.com/your-username/covid-19-visualization.git
+cd covid-19-visualization
+```
 
-    The first step for generating the map prior to calling the function mapRender(), two variables needed to be created, one was svg, and g.
+2. Install dependencies:
 
-![svg, g](<images/svg_g.png>)<br>
+```bash
+pip install flask beautifulsoup4 pandas
+```
 
-    These two variables will be used so that the when the map is moved the ‘states’ will disappear and reappear and be drawn correctly.
+3. Run the Flask application:
 
-    The function mapRender() has the functions that are required to draw a SVG layer from a dynamic d3.json call which is displayed below.
+```bash
+python webserver.py
+```
+The application will be accessible at http://127.0.0.1:5000/.
 
-![d3.json(dynamic call)](<images/d3.json.png>)<br>
+## Data Sources
 
-    This data is fed into this custom function that Mike Bostock had developed himself.
+* COVID-19 statistics are stored in an SQLite database(`Resources/states.db`).
+* Geographical data for states is retreived from a GeoJSON file(`Resources/state_geometries.json`).
 
-![custom function](<images/Mike_Bostock_custom.png>)<br>
+## Javascript(`logic.js`)
 
-    This code will take the points and convert the GeoJSON to SVG.
+The JavaScript file `logic.js` handles the client-side logic for rendering the map using Leaflet.js and D3.js. It defines functions for fetching data from the Flask server, updating the map based on user interactions, and styling the map features.
 
-![variable feature](<images/feature.png>)<br>
+## Map Rendering
 
-    The variable feature holds the SVG points.  The selection.attr method draws between the points on the map overlay.
+The script initializes a Leaflet map centered on the USA and adds a base layer from OpenStreetMap. It also sets up controllers for user interaction, such as a date selector and a dropdown for selecting COVID-19 data types.
 
-![svg.attribute](<images/svg.attr.png>)<br>
+## COVID-19 Data Visualization
 
-    This will draw and redraw the map when the map is moved.
+The `mapRender` function fetches COVID-19 data from the Flask server based on user selections and renders the data as SVG vectors on the Leaflet map. The map features are styled based on the selected data type (confirmed cases, deaths, or infection rate) and the corresponding values.
 
-    Finally with Leaflet layer called geojson_layer the data Collection, the style, and the onEachFeature is called.  This populates the map with the layer overlay which has the states and the different colors based on which map_type is chosen and the date by the user.  
-    The inputs were set up prior to mapRender().  There is a Document Object Model (DOM) for both objects. The ‘topright’ is the hover which asks for the user to put their mouse over any state and they will see the state name and the map_type which they would select from the drop down on the ‘bottomright’.
+## Acknowledgements
 
-![controllers and their DOMs hehe](<images/DOM_Controllers.png>)<br>
+* This project utilizes Flask for web server functionality, Leaflet.js for map rendering, and D3.js for data manipulation and visualization.
 
-## HTML
--Using libraries bootstrap css, bootstrap javascript, CSS file
+* GeoJSON data for state geometries is obtained from `Resources/state_geometries.json`.
 
-    Bootstrap javascript was utilized here with a range bar slider which allowed the user to select a date to change.
-![bootstrap html](<images/bootstrap_html.png>)
-![bootstrap javascript](<images/bootstrap_JS.png>)
+* COVID-19 statistics are retrieved from an SQLite database (`Resources/states.db`).
 
+* The map design is inspired by examples from Leaflet.js documentation (https://leafletjs.com/examples/).
 
+* Data manipulation techniques are influenced by D3.js examples and Mike Bostock's work (https://bost.ocks.org/mike/).

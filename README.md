@@ -1,3 +1,4 @@
+## ChronoMap USA: A Year in GeoVolution
 ## Flask Web Application for COVID-19 Visualization
 
 This project is a Flask web application that visualizes COVID-19 data using Leaflet.js for map rendering and D3.js for data manipulation. The application fetches data from a SQLite database containing COVID-19 statistics and displays the information on an interactive map.
